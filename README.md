@@ -1,63 +1,17 @@
-# Hydrogen template: Skeleton
+# Fashion Wallah
 
-Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dovetail with [Remix](https://remix.run/), Shopify’s full stack web framework. This template contains a **minimal setup** of components, queries and tooling to get started with Hydrogen.
+Welcome to Fashionwallah!
 
-[Check out Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
-[Get familiar with Remix](https://remix.run/docs/en/v1)
+At Fashionwallah, we believe that beauty is an expression of individuality. Since 2018, we have been dedicated to helping our customers enhance their personal style through our exquisite collection of jewelry, purses, and hair accessories and many more categories.
 
-## What's included
+Our passion for craftsmanship and attention to detail is evident in every piece we create. We curate a diverse range of products that cater to different tastes and occasions, ensuring that you can find the perfect accessory to complement your unique style.
 
-- Remix
-- Hydrogen
-- Oxygen
-- Shopify CLI
-- ESLint
-- Prettier
-- GraphQL generator
-- TypeScript and JavaScript flavors
-- Minimal setup of components and routes
+What sets us apart is our commitment to quality and authenticity. We source materials from trusted suppliers and work with skilled artisans who bring their expertise and passion to every creation. From timeless classics to contemporary designs, our collection reflects the latest trends while maintaining a touch of elegance and sophistication.
 
-## Getting started
+At Fashionwallah, we understand that accessories go beyond mere adornments; they are an extension of your personality. That’s why we strive to offer a seamless shopping experience, providing personalized assistance and styling advice to help you find the pieces that resonate with your individuality.
 
-**Requirements:**
+We value our customers and their trust in us. We pride ourselves on delivering exceptional customer service and ensuring your satisfaction with every purchase. From the moment you browse our website to the moment your order arrives at your doorstep, we are here to make your experience enjoyable and memorable.
 
-- Node.js version 16.14.0 or higher
+Whether you’re looking for a statement necklace, a chic handbag, or stylish hair accessories, Fashionwallah has a wide selection to suit your needs. Our commitment to affordability means that you don’t have to compromise on quality to find something truly special.
 
-```bash
-npm create @shopify/hydrogen@latest
-```
-
-## Building for production
-
-```bash
-npm run build
-```
-
-## Local development
-
-```bash
-npm run dev
-```
-
-## Setup for using Customer Account API (`/account` section)
-
-### Setup public domain using ngrok
-
-1. Setup a [ngrok](https://ngrok.com/) account and add a permanent domain (ie. `https://<your-ngrok-domain>.app`).
-1. Install the [ngrok CLI](https://ngrok.com/download) to use in terminal
-1. Start ngrok using `ngrok http --domain=<your-ngrok-domain>.app 3000`
-
-### Include public domain in Customer Account API settings
-
-1. Go to your Shopify admin => `Hydrogen` or `Headless` app/channel => Customer Account API => Application setup
-1. Edit `Callback URI(s)` to include `https://<your-ngrok-domain>.app/account/authorize`
-1. Edit `Javascript origin(s)` to include your public domain `https://<your-ngrok-domain>.app` or keep it blank
-1. Edit `Logout URI` to include your public domain `https://<your-ngrok-domain>.app` or keep it blank
-
-### Prepare Environment variables
-
-Run [`npx shopify hydrogen link`](https://shopify.dev/docs/custom-storefronts/hydrogen/cli#link) or [`npx shopify hydrogen env pull`](https://shopify.dev/docs/custom-storefronts/hydrogen/cli#env-pull) to link this app to your own test shop.
-
-Alternatly, the values of the required environment varaibles "PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID" and "PUBLIC_CUSTOMER_ACCOUNT_API_URL" can be found in customer account api settings in the Hydrogen admin channel.
-
-🗒️ Note that mock.shop doesn't supply these variables automatically.
+Join us in celebrating the artistry and elegance of accessories. Browse our collection, indulge your senses, and discover the perfect piece that reflects your unique style at Fashionwallah.
