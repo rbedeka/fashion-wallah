@@ -25,7 +25,9 @@ export function Aside({
           history.go(-1);
           window.location.hash = '';
         }}
-      />
+      >
+        {' '}
+      </button>
       <aside>
         <header>
           <h3>{heading}</h3>

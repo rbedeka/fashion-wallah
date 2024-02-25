@@ -1,14 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Avenir+Next:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
-body {
-  font-family: 'Avenir Next', sans-serif;
-}
-
 :root {
   --aside-width: 400px;
   --cart-aside-summary-height-with-discount: 300px;
   --cart-aside-summary-height: 250px;
-  --grid-item-width: 355px;
+  --grid-item-width: 23vw;
   --header-height: 64px;
   --color-dark: #000;
   --color-light: #fff;
@@ -263,8 +257,7 @@ aside li {
 * --------------------------------------------------
 */
 .predictive-search {
-  height: calc(100vh - var(--header-height) - 40px);
-  overflow-y: auto;
+  
 }
 
 .predictive-search-form {
@@ -330,9 +323,16 @@ aside li {
 .recommended-products-grid {
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: repeat(2, 1fr);
-  @media (min-width: 45em) {
-    grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  
+  /* TABLET */
+  @media only screen and (min-width: 768px) and (max-width: 1024px){
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* MOBILE */
+  @media (max-width: 769px) {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 
@@ -368,13 +368,13 @@ aside li {
     max-width: 600px;
   }
 }
-
-.products-grid {
+/* .products-grid {
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(var(--grid-item-width), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(90vw, 1fr));
   margin-bottom: 2rem;
-}
+} */
+
 
 .product-item img {
   height: auto;

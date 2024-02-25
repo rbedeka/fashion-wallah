@@ -21,8 +21,16 @@ import type {CustomerAccessToken} from '@shopify/hydrogen/storefront-api-types';
 import favicon from '../public/favicon.svg';
 import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
-import compiledStyles from '~/styles/mesStyles.css';
-import tailwindStyles from '~/styles/tailwind.css';
+import compiled_tailwind from '~/styles/output.css';
+import tailwind from '~/styles/tailwind.css';
+import footer_mobile from './styles/footer/FooterM.css';
+import footer_desktop from './styles/footer/FooterD.css';
+import footer_styles from './styles/footer/footer.css';
+import global from './styles/global.css';
+
+import mobile_sizes from './styles/global/mobile.css';
+import desktop_sizes from './styles/global/desktop.css';
+import tablet_sizes from './styles/global/tablet.css';
 
 import {Layout} from '~/components/Layout';
 
@@ -51,8 +59,39 @@ export function links() {
   return [
     {rel: 'stylesheet', href: resetStyles},
     {rel: 'stylesheet', href: appStyles},
-    {rel: 'stylesheet', href: compiledStyles},
-    {rel: 'stylesheet', href: tailwindStyles},
+    {rel: 'stylesheet', href: compiled_tailwind},
+    {rel: 'stylesheet', href: tailwind},
+
+    {
+      rel: 'stylesheet',
+      href: footer_mobile,
+      media: 'screen and (max-width: 768px)',
+    },
+    {
+      rel: 'stylesheet',
+      href: footer_desktop,
+      media: 'screen and (min-width: 769px)',
+    },
+
+    {rel: 'stylesheet', href: footer_styles},
+    {rel: 'stylesheet', href: global},
+
+    // Global fontsize and image sizes below
+    {
+      rel: 'stylesheet',
+      href: mobile_sizes,
+      media: 'screen and (max-width: 768px)',
+    },
+    {
+      rel: 'stylesheet',
+      href: tablet_sizes,
+      media: 'screen and (min-width: 768px) and (max-width: 1024px)',
+    },
+    {
+      rel: 'stylesheet',
+      href: desktop_sizes,
+      media: 'screen and (min-width: 1024px)',
+    },
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',

@@ -8,11 +8,25 @@ import {
 } from '@shopify/hydrogen';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
+import CollectionBanner from '../components/fadeCarousel/CollectionCarousel';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
 };
 
+export const banner_data = {
+  image: {
+    id: 'gid://shopify/CollectionImage/1609449013270',
+    url: 'https://cdn.shopify.com/s/files/1/0688/1755/1382/collections/cd_three_pairs_of_neatly_arranged_men_and_womens_running_shoes._f4121e54-2c8a-4ad2-b366-355c0cc4348d_1.png?v=1675461870',
+    altText: null,
+    width: '100vw',
+  },
+  BannerTextData: {
+    Title: 'Some Banner Title',
+    Description: 'description is this is the watch for my wrist',
+    BannerFontColor: 'white',
+  },
+};
 export async function loader({request, params, context}: LoaderFunctionArgs) {
   const {handle} = params;
   const {storefront} = context;
@@ -40,23 +54,46 @@ export default function Collection() {
   const {collection} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>{collection.title}</h1>
-      <p className="collection-description">{collection.description}</p>
-      <Pagination connection={collection.products}>
-        {({nodes, isLoading, PreviousLink, NextLink}) => (
-          <>
-            <PreviousLink>
-              {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
-            </PreviousLink>
-            <ProductsGrid products={nodes} />
-            <br />
-            <NextLink>
-              {isLoading ? 'Loading...' : <span>Load more ↓</span>}
-            </NextLink>
-          </>
-        )}
-      </Pagination>
+    <div
+      className="collection"
+      style={{background: 'linear-gradient(to bottom,#ffd1df 40%,white 100%)'}}
+    >
+      {/* BANNER CODE */}
+      <CollectionBanner bannerData={banner_data} />
+
+      {/* <h1>{collection.title}</h1> */}
+      {/* <p className="collection-description">{collection.description}</p> */}
+
+      <div className="text-center w-full mt-5 mb-5 text-xl text-black">
+        {collection.products.nodes.length}&nbsp;Products
+      </div>
+      <div className="w-full text-black">
+        <div className="grid resp_grid place-items-center text-center px-5 mb-5">
+          {collection.products.nodes.map((item, index) => (
+            <div className="text-black m-1 mx-5" key={item.id}>
+              {item.title}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="p-5 w-full">
+        {/* <div className='p-10 text-black text-3xl'>{collection.title}'s collection</div> */}
+        <Pagination connection={collection.products}>
+          {({nodes, isLoading, PreviousLink, NextLink}) => (
+            <>
+              <PreviousLink>
+                {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+              </PreviousLink>
+              <ProductsGrid products={nodes} />
+              <br />
+              <NextLink>
+                {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+              </NextLink>
+            </>
+          )}
+        </Pagination>
+      </div>
     </div>
   );
 }

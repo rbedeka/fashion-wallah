@@ -1,0 +1,12 @@
+.responsive_row_col{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.contact_input{
+    min-width: 50vw;
+}
+
+.row_col_mx{
+    max-width: 90vw
+}

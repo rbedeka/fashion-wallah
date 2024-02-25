@@ -1,3 +1,6 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {Suspense} from 'react';
 import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
@@ -6,6 +9,7 @@ import {
   useLoaderData,
   type MetaFunction,
   type FetcherWithComponents,
+  useNavigate,
 } from '@remix-run/react';
 import type {
   ProductFragment,
@@ -26,6 +30,8 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import {getVariantUrl} from '~/lib/variants';
+// icons
+import {FaArrowLeftLong} from 'react-icons/fa6';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.product.title ?? ''}`}];
@@ -116,14 +122,29 @@ function redirectToFirstVariant({
 export default function Product() {
   const {product, variants} = useLoaderData<typeof loader>();
   const {selectedVariant} = product;
+  const navigate = useNavigate();
+
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <ProductMain
-        selectedVariant={selectedVariant}
-        product={product}
-        variants={variants}
-      />
+    <div
+      style={{background: 'linear-gradient(to bottom,#ffd1df 40%,white 100%)'}}
+    >
+      <div
+        className="flex flex-row justify-start items-center"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <FaArrowLeftLong size={15} />
+        &nbsp; Go Back
+      </div>
+      <div className="product">
+        <ProductImage image={selectedVariant?.image} />
+        <ProductMain
+          selectedVariant={selectedVariant}
+          product={product}
+          variants={variants}
+        />
+      </div>
     </div>
   );
 }
@@ -157,7 +178,7 @@ function ProductMain({
   const {title, descriptionHtml} = product;
   return (
     <div className="product-main">
-      <h1>{title}</h1>
+      <h1 className="text-bold text-4xl">{title}</h1>
       <ProductPrice selectedVariant={selectedVariant} />
       <br />
       <Suspense
@@ -208,7 +229,10 @@ function ProductPrice({
           <div className="product-price-on-sale">
             {selectedVariant ? <Money data={selectedVariant.price} /> : null}
             <s>
-              <Money data={selectedVariant.compareAtPrice} />
+              <Money
+                data={selectedVariant.compareAtPrice}
+                className="text-xl"
+              />
             </s>
           </div>
         </>
@@ -315,6 +339,7 @@ function AddToCartButton({
             type="submit"
             onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
+            className="bg-blue-500 rounded-md text-white w-full p-1"
           >
             {children}
           </button>

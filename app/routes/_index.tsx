@@ -6,6 +6,38 @@ import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
+import FadeCarousel, {
+  links as FadeCarouselCss,
+} from '~/components/fadeCarousel/FadeCarousel';
+import RatingFeed, {ReviewsNRating} from '~/components/RatingsFeed';
+
+export const TEST_RATING_DATA = [
+  {
+    id: 1,
+    rating: 4.7,
+    feedBack:
+      'Absolutely stunning craftsmanship! The jewelry I received exceeded my expectations.',
+    sender: 'Priya Patel',
+  },
+  {
+    id: 2,
+    rating: 4.9,
+    feedBack:
+      'Exquisite pieces! Each item I purchased was beautifully designed and of exceptional quality.',
+    sender: 'Rajesh Kumar',
+  },
+  {
+    id: 3,
+    rating: 4.5,
+    feedBack:
+      'Impressed with the elegance and beauty of the jewelry. Will definitely be a returning customer.',
+    sender: 'Aarav Sharma',
+  },
+];
+
+export function links() {
+  return [...FadeCarouselCss()];
+}
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -16,16 +48,57 @@ export async function loader({context}: LoaderFunctionArgs) {
   const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
   const featuredCollection = collections.nodes[0];
   const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+  const bannerImages = collections.nodes;
 
-  return defer({featuredCollection, recommendedProducts});
+  return defer({featuredCollection, recommendedProducts, bannerImages});
 }
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
+      <FadeCarousel>
+        {data.bannerImages.map((item, index) => (
+          <div key={item.id}>
+            <div
+              className="flex justify-center items-center m-0"
+              style={{
+                background: 'linear-gradient(transparent,#d3d3d3,transparent)',
+              }}
+            >
+              {item.image && (
+                <img
+                  src={item.image.url}
+                  key={item.image.id}
+                  alt="BannerImage"
+                  style={{width: '50%'}}
+                />
+              )}
+            </div>
+          </div>
+        ))}
+      </FadeCarousel>
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
+      <ReviewsNRating
+        count={[100, 23123]}
+        label={['reviews', 'happy customers']}
+        reviews={[]}
+      />
+      <FadeCarousel>
+        {TEST_RATING_DATA.map((rating, index) => (
+          <div key={rating.id}>
+            <RatingFeed
+              RatingObject={rating}
+              rateSize={40}
+              fontStyle={{
+                fontSize: '1.5em',
+                color: '#1E404C',
+              }}
+            />
+          </div>
+        ))}
+      </FadeCarousel>
     </div>
   );
 }

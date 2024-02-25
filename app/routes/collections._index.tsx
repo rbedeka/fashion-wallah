@@ -1,7 +1,11 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
 import {useLoaderData, Link} from '@remix-run/react';
 import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Pagination, getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
+import {FaChevronCircleRight} from 'react-icons/fa';
+import React, {useState} from 'react';
 
 export async function loader({context, request}: LoaderFunctionArgs) {
   const paginationVariables = getPaginationVariables(request, {
@@ -19,8 +23,11 @@ export default function Collections() {
   const {collections} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collections">
-      <h1>Collections</h1>
+    <div
+      className="collections"
+      style={{background: 'linear-gradient(to bottom,#ffd1df 40%,white 100%)'}}
+    >
+      <p className="text-3xl">Collection</p>
       <Pagination connection={collections}>
         {({nodes, isLoading, PreviousLink, NextLink}) => (
           <div>
@@ -29,7 +36,7 @@ export default function Collections() {
             </PreviousLink>
             <CollectionsGrid collections={nodes} />
             <NextLink>
-              {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+              {isLoading ? 'Loading...' : <span>Load extra ↓</span>}
             </NextLink>
           </div>
         )}
@@ -59,23 +66,36 @@ function CollectionItem({
   collection: CollectionFragment;
   index: number;
 }) {
+  const [visiblity, setVisiblity] = useState<'hidden' | 'visible'>('hidden');
+
   return (
-    <Link
-      className="collection-item"
-      key={collection.id}
-      to={`/collections/${collection.handle}`}
-      prefetch="intent"
-    >
-      {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-        />
-      )}
-      <h5>{collection.title}</h5>
-    </Link>
+    <div className="relative">
+      <Link
+        className="collection-item"
+        key={collection.id}
+        to={`/collections/${collection.handle}`}
+        prefetch="intent"
+      >
+        {collection?.image && (
+          <Image
+            alt={collection.image.altText || collection.title}
+            aspectRatio="1/1"
+            data={collection.image}
+            loading={index < 3 ? 'eager' : undefined}
+          />
+        )}
+        <div
+          className="absolute m-3 bottom-0 left-0 flex flex-col justify-start"
+          onMouseOver={() => setVisiblity('visible')}
+          onMouseOut={() => setVisiblity('hidden')}
+        >
+          <FaChevronCircleRight
+            style={{color: 'white', visibility: visiblity}}
+          />
+          <h5 className="text-white text-xl">{collection.title}</h5>
+        </div>
+      </Link>
+    </div>
   );
 }
 

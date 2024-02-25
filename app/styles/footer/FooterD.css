@@ -1,0 +1,9 @@
+.responsive_row_col{
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 50px;
+}
+
+.row_col_mx{
+    max-width: 30vw;
+}

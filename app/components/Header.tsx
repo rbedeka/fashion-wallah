@@ -1,10 +1,13 @@
 import {Await, NavLink} from '@remix-run/react';
-import {Suspense} from 'react';
-import type {HeaderQuery} from 'storefrontapi.generated';
+import {Suspense, useState} from 'react';
+import type {CartApiQueryFragment, HeaderQuery} from 'storefrontapi.generated';
 import type {LayoutProps} from './Layout';
 import {useRootLoaderData} from '~/root';
 import {IoSearchSharp} from 'react-icons/io5';
 import {PiShoppingBag} from 'react-icons/pi';
+import HeadModel from './HeadModal';
+import {PredictiveSearchForm, PredictiveSearchResults} from './Search';
+import {CartMain} from './Cart';
 
 type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>;
 
@@ -13,21 +16,24 @@ type Viewport = 'desktop' | 'mobile';
 export function Header({header, isLoggedIn, cart}: HeaderProps) {
   const {shop, menu} = header;
   return (
-    <header className="header backdrop-blur-md bg-white/30">
+    <header className="header backdrop-blur-md bg-white/30 bg-white">
+      {/* BRAND */}
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <div style={brand_style}>
-          <div className="bg-white text-transparent p-1">
-            <span className="bg-gradient-to-r from-cyan-500 via-purple-500 to-red-500 text-transparent bg-clip-text shadow-text">
-              {shop.name}
-            </span>
+        <div className="flex flex-row justify-center">
+          <div className="bg-white text-transparent p-1 text-center bg-gradient-to-r from-cyan-500 via-purple-500 to-red-500 bg-clip-text shadow-text font-bold text-2xl">
+            {shop.name}
           </div>
         </div>
       </NavLink>
+
+      {/* MENU */}
       <HeaderMenu
         menu={menu}
         viewport="desktop"
         primaryDomainUrl={header.shop.primaryDomain.url}
       />
+
+      {/* EXTRAS */}
       <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
     </header>
   );
@@ -77,7 +83,7 @@ export function HeaderMenu({
             : item.url;
         return (
           <NavLink
-            className="header-menu-item"
+            className="header-menu-item font-bold footer_font"
             end
             key={item.id}
             onClick={closeAside}
@@ -99,7 +105,6 @@ function HeaderCtas({
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
     <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
@@ -109,6 +114,7 @@ function HeaderCtas({
       </NavLink>
       <SearchToggle />
       <CartToggle cart={cart} />
+      <HeaderMenuMobileToggle />
     </nav>
   );
 }
@@ -122,28 +128,110 @@ function HeaderMenuMobileToggle() {
 }
 
 function SearchToggle() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
-    <a href="#search-aside">
-      <IoSearchSharp style={{fontSize: '25px'}} />
-    </a>
+    <>
+      <button onClick={showModal} style={{cursor: 'pointer'}}>
+        <IoSearchSharp style={{fontSize: '25px'}} />
+      </button>
+      {/* ACTUAL DIALOG CODE */}
+      <HeadModel
+        title={'Search'}
+        isVisible={isModalVisible}
+        handleCancel={handleCancel}
+      >
+        {/* HEAD MODEL IS DIALOG AND IT'S CHILD ELEMENTS ARE PLACED BELOW  */}
+        <div className="predictive-search">
+          <br />
+          <PredictiveSearchForm>
+            {({fetchResults, inputRef}) => (
+              <div className="flex flex-row items-center">
+                <input
+                  name="q"
+                  onChange={fetchResults}
+                  placeholder="Search"
+                  ref={inputRef}
+                  onFocus={(r) => {
+                    setFocused(true);
+                    fetchResults(r);
+                  }}
+                  onBlur={() => setFocused(false)}
+                  type="search"
+                  className={
+                    (focused
+                      ? 'border-b border-black outline-none'
+                      : 'border border-none') + ' w-80'
+                  }
+                />
+                &nbsp;
+                <button type="submit">
+                  <IoSearchSharp size={30} />
+                </button>
+              </div>
+            )}
+          </PredictiveSearchForm>
+          <PredictiveSearchResults />
+        </div>
+      </HeadModel>
+    </>
+  );
+}
+function CartBadge({
+  count,
+  cart,
+}: {
+  count: number;
+  cart: Promise<CartApiQueryFragment | null>;
+}) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  return (
+    <>
+      <button onClick={showModal} style={{cursor: 'pointer'}}>
+        <PiShoppingBag style={{fontSize: '25px'}} />
+      </button>
+      {/* ACTUAL DIALOG CODE */}
+      <HeadModel
+        title={'Cart'}
+        isVisible={isModalVisible}
+        handleCancel={handleCancel}
+      >
+        {/* HEAD MODEL IS DIALOG AND IT'S CHILD ELEMENTS ARE PLACED BELOW  */}
+        <Suspense fallback={<p>Loading cart ...</p>}>
+          <Await resolve={cart}>
+            {(cart) => {
+              return <CartMain cart={cart} layout="aside" />;
+            }}
+          </Await>
+        </Suspense>
+      </HeadModel>
+    </>
   );
 }
 
-function CartBadge({count}: {count: number}) {
+//@ts-expect-error
+function CartToggle({cart}) {
   return (
-    <a href="#cart-aside">
-      <PiShoppingBag style={{fontSize: '25px'}} /> {count}
-    </a>
-  );
-}
-
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
-  return (
-    <Suspense fallback={<CartBadge count={0} />}>
+    <Suspense fallback={<CartBadge count={0} cart={cart} />}>
       <Await resolve={cart}>
         {(cart) => {
-          if (!cart) return <CartBadge count={0} />;
-          return <CartBadge count={cart.totalQuantity || 0} />;
+          if (!cart) return <CartBadge count={0} cart={cart} />;
+          return <CartBadge count={cart.totalQuantity || 0} cart={cart} />;
         }}
       </Await>
     </Suspense>

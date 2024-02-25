@@ -1,17 +1,12 @@
 import {NavLink} from '@remix-run/react';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 import {useRootLoaderData} from '~/root';
-import footerStyles from '~/styles/footer.css';
 
 // ICONS
 import VisaCardIcon from '~/icons/VisaCardIcon';
 import MasterCardIcon from '~/icons/MasterCardIcon';
 import GpayIcon from '~/icons/GpayIcon';
 import ShopIcon from '~/icons/ShopIcon';
-
-export function links() {
-  return [{rel: 'stylesheet', href: footerStyles}];
-}
 
 export function Footer({
   menu,
@@ -21,8 +16,7 @@ export function Footer({
     <footer
       className="footer"
       style={{
-        background:
-          'linear-gradient(transparent 3%,rgb(205,205,205),black 100%)',
+        background: 'linear-gradient(to bottom, #8A8A8A, #000)',
       }}
     >
       {/* BRAND NAME */}
@@ -33,7 +27,7 @@ export function Footer({
       {/* FEATURES AND OFFER SECTION */}
       <FooterFeatures feature_and_offer={STORE_OFFERS_AND_FEATURES} />
 
-      <div className="flex flex-row justify-between px-48">
+      <div className="flex responsive_row_col">
         {/* CONTACT SECTION */}
         <ContactSection />
 
@@ -41,13 +35,24 @@ export function Footer({
         {menu && shop?.primaryDomain?.url && (
           <FooterMenu menu={menu} primaryDomainUrl={shop.primaryDomain.url} />
         )}
+
+        {/* SECTION 3 SHORT DESCRIPTION */}
+        <div className="text-gray-200 row_col_mx row_col_mx text-md  my-3">
+          Discover a wide range of fashion accessories for women & men like
+          natural stone bracelets, pearl necklaces, stainless steel rings and
+          scrunchies, with a range of aesthetics to mirror the versatility of
+          your modern wardrobe. Offering gift wrap and express delivery across
+          India, to make Mesmerize India your go to fashion accessory brand for
+          shopping affordable jewellery, whether it is for yourself or your
+          loved ones. Be bold. Stay fresh.
+        </div>
       </div>
       <div className="flex flex-row justify-between items-center my-20 px-10">
-        <div className="text-stone-200 w-2/12">
+        <div className="w-2/12 text-gray-300">
           Copyright ©2023 All Rights Reserved FashionWallah.
         </div>
 
-        <div className="flex flex-row justify-between w-2/12">
+        <div className="flex flex-row justify-between w-3/12">
           <VisaCardIcon />
           <MasterCardIcon />
           <GpayIcon />
@@ -68,8 +73,8 @@ function FooterMenu({
   const {publicStoreDomain} = useRootLoaderData();
 
   return (
-    <nav className="footer-menu" role="navigation">
-      <div className="flex flex-col text-gray-200">
+    <nav className="row_col_mx" role="navigation">
+      <div className="flex flex-col justify-between items-center h-full text-center my-3">
         {(menu || FALLBACK_FOOTER_MENU).items.map((item, index) => {
           if (!item.url) return null;
           // if the url is internal, we strip the domain
@@ -81,8 +86,7 @@ function FooterMenu({
               : item.url;
           const isExternal = !url.startsWith('/');
           return (
-            // eslint-disable-next-line react/no-array-index-key
-            <div className="my-3" key={'FOOTER_MENU_' + index}>
+            <div className="text-md" key={item.id}>
               {isExternal ? (
                 <a
                   href={url}
@@ -90,7 +94,9 @@ function FooterMenu({
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  {item.title}
+                  <span className="text-gray-200 hover:text-white">
+                    {item.title}
+                  </span>
                 </a>
               ) : (
                 <NavLink
@@ -100,7 +106,9 @@ function FooterMenu({
                   style={activeLinkStyle}
                   to={url}
                 >
-                  {item.title}
+                  <span className="text-gray-200 hover:text-white">
+                    {item.title}
+                  </span>
                 </NavLink>
               )}
             </div>
@@ -204,8 +212,8 @@ const STORE_OFFERS_AND_FEATURES = [
 
 const ContactSection = () => {
   return (
-    <div className="flex flex-col justify-center items-left">
-      <div className="text-white text-4xl my-3 footer_font">Hey there 👋🏼</div>
+    <div className="flex flex-col justify-between items-left row_col_mx  my-3">
+      <div className="text-white text-4xl footer_font">Hey there 👋🏼</div>
       <div className="text-gray-200 my-3 footer_font">
         Stay in touch for good vibes & no spam.
       </div>
@@ -223,7 +231,8 @@ const ContactSection = () => {
                     bg-transparent
                     focus:text-white
                     border-0
-                    footer_font"
+                    footer_font
+                    contact_input"
               style={{minWidth: '10vw'}}
               id="Email"
               type="text"
