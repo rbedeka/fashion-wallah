@@ -66,7 +66,6 @@ type ReviewsNRatingProps = {
 export function ReviewsNRating({count, label, reviews}: ReviewsNRatingProps) {
   return (
     <div
-      style={{background: 'linear-gradient(to bottom, #8A8A8A, #000)'}}
       className="text-center flex flex-row justify-center items-center text-transparent text-8xl bg-clip-text bg-gradient-to-b from-indigo-700 to-indigo-950 m-5"
     >
       <div className="flex flex-col justify-center items-center mx-20">
