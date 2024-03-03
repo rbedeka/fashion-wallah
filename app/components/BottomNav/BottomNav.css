@@ -1,0 +1,19 @@
+/* Your CSS file or inline styles */
+
+.bottom-to-up {
+    position: fixed;
+    bottom: -100vh; /* Initially hide off-screen */
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    transition: bottom 0.3s ease-in-out;
+  }
+  
+  .bottom-to-up.open {
+    bottom: 0; /* Display on screen when open */
+  }
+  
+  body.menu-open {
+    overflow: hidden; /* Prevent scrolling when the menu is open */
+  }
+  
